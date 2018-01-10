@@ -14,9 +14,12 @@ const logger = require('../lib/logger')
 const generate = require('../lib/generate')
 const checkVersion = require('../lib/check-version')
 const localPath = require('../lib/local-path')
+const installPkg = require('../lib/install-pkg')
 
 const isLocalPath = localPath.isLocalPath
 const getTemplatePath = localPath.getTemplatePath
+
+const tmprcDir = '.gmfile-templates'
 
 /**
  * Usage.
@@ -26,6 +29,8 @@ program
   .usage('<template-name> [project-name]')
   .option('-c, --clone', 'use git clone')
   .option('--offline', 'use cached template')
+  .option('--install', 'run npm install for repo')
+  .option('--cleanTmp', 'clean the tmp dir')
 
 /**
  * Help.
@@ -40,14 +45,20 @@ program.on('--help', () => {
 })
 
 /**
- * Help.
+ * Help and Clean
  */
 
-function help () {
+function defaultr () {
   program.parse(process.argv)
-  if (program.args.length < 1) return program.help()
+  if (program.args.length < 1) {
+    if (program.cleanTmp) {
+      rm(path.join(home, tmprcDir))
+      process.exit()
+    }
+    return program.help()
+  }
 }
-help()
+defaultr()
 
 /**
  * Settings.
@@ -61,7 +72,7 @@ const name = inPlace ? path.relative('../', process.cwd()) : rawName
 const to = path.resolve(rawName || '.')
 const clone = program.clone || false
 
-const tmp = path.join(home, '.gmfile-templates', template.replace(/\//g, '-'))
+const tmp = path.join(home, tmprcDir, template.replace(/\//g, '-'))
 if (program.offline) {
   console.log(`> Use cached template at ${chalk.yellow(tildify(tmp))}`)
   template = tmp
@@ -140,6 +151,8 @@ function downloadAndGenerate (template) {
   download(template, tmp, { clone }, err => {
     spinner.stop()
     if (err) logger.fatal('Failed to download repo ' + template + ': ' + err.message.trim())
+    if (program.install) installPkg(tmp)
+
     generate(name, tmp, to, err => {
       if (err) logger.fatal(err)
       console.log()
