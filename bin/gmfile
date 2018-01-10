@@ -30,7 +30,9 @@ program
   .option('-c, --clone', 'use git clone')
   .option('--offline', 'use cached template')
   .option('--install', 'run npm install for repo')
-  .option('--cleanTmp', 'clean the tmp dir')
+  .option('--clean-tmp', 'clean the tmp dir')
+  .option('-d, --dir <dirname>', 'run gmfile with a specified directory at the repo')
+  .parse(process.argv)
 
 /**
  * Help.
@@ -51,7 +53,7 @@ program.on('--help', () => {
 function defaultr () {
   program.parse(process.argv)
   if (program.args.length < 1) {
-    if (program.cleanTmp) {
+    if (program['clean-tmp']) {
       rm(path.join(home, tmprcDir))
       process.exit()
     }
@@ -65,7 +67,6 @@ defaultr()
  */
 
 let template = program.args[0]
-const hasSlash = template.indexOf('/') > -1
 const rawName = program.args[1]
 const inPlace = !rawName || rawName === '.'
 const name = inPlace ? path.relative('../', process.cwd()) : rawName
@@ -111,28 +112,11 @@ function run () {
   // check if template is local
   if (isLocalPath(template)) {
     const templatePath = getTemplatePath(template)
-    if (exists(templatePath)) {
-      generate(name, templatePath, to, err => {
-        if (err) logger.fatal(err)
-        console.log()
-        logger.success('Generated "%s".', name)
-      })
-    } else {
-      logger.fatal('Local template "%s" not found.', template)
-    }
+    const finalTmp = getPathWithDir(templatePath)
+    safeGenerate(finalTmp, finalTmp)
   } else {
     checkVersion(() => {
-      if (!hasSlash) {
-        // use official templates
-        const officialTemplate = 'vuejs-templates/' + template
-        if (template.indexOf('#') !== -1) {
-          downloadAndGenerate(officialTemplate)
-        } else {
-          downloadAndGenerate(officialTemplate)
-        }
-      } else {
-        downloadAndGenerate(template)
-      }
+      downloadAndGenerate(template)
     })
   }
 }
@@ -151,12 +135,27 @@ function downloadAndGenerate (template) {
   download(template, tmp, { clone }, err => {
     spinner.stop()
     if (err) logger.fatal('Failed to download repo ' + template + ': ' + err.message.trim())
-    if (program.install) installPkg(tmp)
 
-    generate(name, tmp, to, err => {
+    const finalTmp = getPathWithDir(tmp)
+    if (program.install) installPkg(finalTmp)
+    safeGenerate(finalTmp, getPathWithDir(template))
+  })
+}
+
+function getPathWithDir (_template) {
+  return typeof program.dir === 'string'
+    ? path.join(_template, program.dir)
+    : _template
+}
+
+function safeGenerate (src, temlateName) {
+  if (exists(src)) {
+    generate(name, src, to, err => {
       if (err) logger.fatal(err)
       console.log()
       logger.success('Generated "%s".', name)
     })
-  })
+  } else {
+    logger.fatal('template "%s" not found.', temlateName)
+  }
 }
