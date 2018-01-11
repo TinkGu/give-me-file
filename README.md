@@ -49,19 +49,33 @@ gmfile TinkGu/my-templates my-project --dir sub
 
 task will run before/after generating files
 
-```javasript
+```javascript
 // meta.js
 
 module.exports = {
   // ...
   task: {
-    before: gt => {
+    // run before ask
+    before: api => {
       // print sth
-      gt.helpers.logger.log('using gmfile')
+      api.helpers.logger.log('using gmfile')
     },
-    after: gt => {
+
+    // run after ask
+    afterAsk: api => {
+      // modify your renderData here!
+      const renderData = api.metalsmith.metadata()
+      if (renderData.a === true) {
+        api.extraRenderData.merge({
+          b: true,
+        })
+      }
+    },
+
+    // run after generate
+    complete: api => {
       // update package.json
-      gt.pkg.update(pkg => ({
+      api.pkg.update(pkg => ({
         ...pkg,
         scripts: {
           ...(pkg.scripts || {}),
@@ -128,10 +142,10 @@ task-api
 
 ```typescript
 interface Task {
-  (gt: GT) => void
+  (api: TaskApi) => void
 }
 
-interface GT {
+interface TaskApi {
   metalsmith: Metalsmith,
   meta: Meta, // the meta obj you defined in meta.js
   helpers: {
@@ -142,6 +156,11 @@ interface GT {
     read: (path?: string) => Promise,
     write: (path?: string, obj: Object) => Promise,
     update: (path?: string, setter: object => object) => Promise,
+  },
+  extraRenderData: {
+    get: () => Object,
+    set: (v: Object) => void, // reassign extraRenderData
+    merge: (v: Object) => void, // merge v to extraRenderData
   }
 }
 
