@@ -154,8 +154,9 @@ interface TaskApi {
   },
   pkg: {
     read: (path?: string) => Promise,
-    write: (path?: string, obj: Object) => Promise,
-    update: (path?: string, setter: object => object) => Promise,
+    write: (obj: Object, path?: string) => Promise,
+    update: (setter: object => object, path?: string) => Promise,
+    merge: (v: Object, path?: string) => Promise
   },
   install: (deps: string | string[]) => void, // install deps
   installDev: (deps: string | string[]) => void, // install dev deps
