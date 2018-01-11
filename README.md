@@ -157,6 +157,8 @@ interface TaskApi {
     write: (path?: string, obj: Object) => Promise,
     update: (path?: string, setter: object => object) => Promise,
   },
+  install: (deps: string | string[]) => void, // install deps
+  installDev: (deps: string | string[]) => void, // install dev deps
   extraRenderData: {
     get: () => Object,
     set: (v: Object) => void, // reassign extraRenderData
