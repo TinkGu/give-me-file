@@ -81,6 +81,47 @@ gmfile TinkGu/my-templates my-project --install
 
 then gmfile will install the deps at package.json for this repo, only after downloading.
 
+## partial
+
+you can add partial dir to your repo, then you can use these partials render your templates.
+
+```
+- meta.js
+- partial/
+  - p.js
+  - .rc
+- template
+  a.js
+```
+
+```bash
+# partial/p.js
+
+this is a partial, pass name to here : {{ name }}
+```
+
+```bash
+# template/a.js
+
+{{> p_js name="a" }}
+```
+
+```bash
+# output
+
+this is a partial, pass name to here : a
+```
+
+### NOTE
+
+**dot `.` in filename will be translate to `_`**
+
+example:
+
+- `.a.js` -> `_a_js`
+- `.rc` -> `_rc`
+
+
 # api
 
 task-api
