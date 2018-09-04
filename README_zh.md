@@ -1,12 +1,12 @@
 # give-me-file
 
-> generate files by generators, inspired of vue-cli
+> 根据模板生成文件，灵感源自于 vue-cli@2.x
 
 [中文](./README_zh.md)
 
 # NOTE
 
-**just copy some code from vue-cli@2, thanks for their work**
+**有些代码直接 copy vue-cli@2 源码, 非常感谢他们的开源工作**
 
 # Install
 
@@ -16,15 +16,22 @@ npm i give-me-file -g
 
 # Usage
 
-you can use this cli tool as vue-cli@2.x, you can see the basic usage at its docs: [vuejs/vue\-cli: 🛠️ CLI for rapid Vue\.js development](https://github.com/vuejs/vue-cli)
+主要用法非常类似于 vue-cli@2.x，可以参照它的官方文档 [vuejs/vue\-cli: 🛠️ CLI for rapid Vue\.js development](https://github.com/vuejs/vue-cli)
 
-give-me-file just add some convient features, such as
+```bash
+gmfile github远程仓库 本地项目文件夹地址
+```
 
-## use template in repo subdir
+gmfile 主要加入了以下特性：
+
+## 允许使用模板仓库中的子文件夹
 
 > `--dir <dirname>` : run gmfile with a specified directory at the repo
 
-Look at the files tree of TinkGu/my-templates
+vue-cli 默认使用仓库下的 template 文件夹作为模板源文件。但有时，虽然需要配置相同的功能（比如都是 eslint），其模板可能完全不同，此时直接写成多个不同的文件夹，而非 if-else 更有助于维护。
+
+
+比如远程模板仓库的文件目录为：
 
 ```
 - package.json
@@ -35,21 +42,24 @@ Look at the files tree of TinkGu/my-templates
   - template/b.js
 ```
 
-run this cmd, you may get `a.js`
+运行以下命令，你会得到 `a.js`
 
 ```bash
 gmfile TinkGu/my-templates my-project
 ```
 
-run this cmd, you may get `b.js`
+指定 `--dir`，则可以得到 `b.js`
 
 ```bash
 gmfile TinkGu/my-templates my-project --dir sub
 ```
 
-## task
+## 任务
 
-task will run before/after generating files
+在生成文件之前或之后，执行一些任务
+
+
+比如
 
 ```javascript
 // meta.js
@@ -57,13 +67,13 @@ task will run before/after generating files
 module.exports = {
   // ...
   task: {
-    // run before ask
+    // 在进行「命令行问答交互」前运行
     before: api => {
       // print sth
       api.helpers.logger.log('using gmfile')
     },
 
-    // run after ask
+    // 在进行「命令行问答交互」后运行
     afterAsk: api => {
       // modify your renderData here!
       const renderData = api.metalsmith.metadata()
@@ -74,7 +84,7 @@ module.exports = {
       }
     },
 
-    // run after generate
+    // 在生成文件后执行
     complete: api => {
       // update package.json
       api.pkg.update(pkg => ({
@@ -89,17 +99,17 @@ module.exports = {
 }
 ```
 
-## install deps for meta.js
+## 为 `meta.js` 自动安装依赖
 
 ```bash
 gmfile TinkGu/my-templates my-project --install
 ```
 
-then gmfile will install the deps at package.json for this repo, only after downloading.
+只要加上 `--install` 就会通过 package.json 自动安装依赖
 
-## partial
+## 模板片段
 
-you can add partial dir to your repo, then you can use these partials render your templates.
+在你的模板仓库里，添加一个 `partial` 目录，该目录下的文件，可以用于 render 你的 templates
 
 ```
 - meta.js
@@ -110,11 +120,21 @@ you can add partial dir to your repo, then you can use these partials render you
   a.js
 ```
 
+partial 的写法和 template 完全一样，它可以被嵌入到 template 中。
+
 ```bash
 # partial/p.js
 
 this is a partial, pass name to here : {{ name }}
 ```
+
+通过 `{{> 文件名 属性名="属性值" }}` 的方式就可以引用 partial 了
+
+**注意：文件名中的 `.` 必须用 `_` 代替**
+
+比如
+- `.a.js` -> `_a_js`
+- `.rc` -> `_rc`
 
 ```bash
 # template/a.js
@@ -127,16 +147,6 @@ this is a partial, pass name to here : {{ name }}
 
 this is a partial, pass name to here : a
 ```
-
-### NOTE
-
-**dot `.` in filename will be translate to `_`**
-
-example:
-
-- `.a.js` -> `_a_js`
-- `.rc` -> `_rc`
-
 
 # api
 
@@ -176,4 +186,4 @@ interface Logger {
 }
 ```
 
-you can see the api for Metalsmith at  [segmentio/metalsmith](https://github.com/segmentio/metalsmith/blob/master/lib/index.js)
+关于 `Metalsmith` 可以查阅这个文档 [segmentio/metalsmith](https://github.com/segmentio/metalsmith/blob/master/lib/index.js)
