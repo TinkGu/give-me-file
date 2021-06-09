@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.4](https://github.com/TinkGu/give-me-file/compare/v2.0.3...v2.0.4) (2021-06-09)
+
+
+### Bug Fixes
+
+* 1. fix the task order; 2. quit on the ejs render error ([ad7b676](https://github.com/TinkGu/give-me-file/commit/ad7b6763cd4fbba64763bdd698ad59e3fcb94415))
+
 ### [2.0.3](https://github.com/TinkGu/give-me-file/compare/v2.0.2...v2.0.3) (2021-06-07)
 
 
