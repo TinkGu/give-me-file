@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/TinkGu/give-me-file/compare/v2.0.4...v2.1.0) (2021-08-03)
+
+
+### Features
+
+* add feature `filename replacement` ([a0029e9](https://github.com/TinkGu/give-me-file/commit/a0029e9e5f23b685386d93ce60d951c77abc8ff5))
+
 ### [2.0.4](https://github.com/TinkGu/give-me-file/compare/v2.0.3...v2.0.4) (2021-06-09)
 
 
