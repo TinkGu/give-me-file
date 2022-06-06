@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.2](https://github.com/TinkGu/give-me-file/compare/v2.1.1...v2.1.2) (2022-06-06)
+
+
+### Bug Fixes
+
+* typo ([60cda2c](https://github.com/TinkGu/give-me-file/commit/60cda2c4e9e36631131fd57aa8369bdf424d6126))
+
 ### [2.1.1](https://github.com/TinkGu/give-me-file/compare/v2.1.0...v2.1.1) (2022-06-06)
 
 
