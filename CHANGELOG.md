@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.3](https://github.com/TinkGu/give-me-file/compare/v2.1.2...v2.1.3) (2022-06-06)
+
+
+### Bug Fixes
+
+* get os from module ([e4d5528](https://github.com/TinkGu/give-me-file/commit/e4d552848c33ec4692365d6c5b005db6a3cb9782))
+
 ### [2.1.2](https://github.com/TinkGu/give-me-file/compare/v2.1.1...v2.1.2) (2022-06-06)
 
 
