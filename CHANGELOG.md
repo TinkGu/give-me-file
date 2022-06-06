@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.1](https://github.com/TinkGu/give-me-file/compare/v2.1.0...v2.1.1) (2022-06-06)
+
+
+### Bug Fixes
+
+* fix the permission issue for tmp dir on the mac ([61bd37e](https://github.com/TinkGu/give-me-file/commit/61bd37e628b56db5c29c2bf603b6f9df99107df3))
+
 ## [2.1.0](https://github.com/TinkGu/give-me-file/compare/v2.0.4...v2.1.0) (2021-08-03)
 
 
